@@ -1,26 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Drop from "./Drop";
+import Drag from "./Drag";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
+import { useState } from "react";
 
-function App() {
+export default function App() {
+  const [lastDrop, setLastDrop] = useState("");
+  const onDragEnd = (result: DropResult) => {
+    setLastDrop(result.destination?.droppableId || "");
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Test overlapping Droppables</h1>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Drop id="drop1" type="A" height={400} zIndex={0}>
+          <Drag id="1" index={0} />
+          <Drop id="drop1-2" type="A" height={300} zIndex={1}>
+            <Drop id="drop1-3" type="A" height={200} zIndex={2}></Drop>
+          </Drop>
+        </Drop>
+      </DragDropContext>
+      <div>Last dropped at droppableId: {lastDrop}</div>
     </div>
   );
 }
-
-export default App;
